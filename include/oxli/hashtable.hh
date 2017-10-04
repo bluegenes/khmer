@@ -124,6 +124,18 @@ inline std::vector<uint64_t> get_n_primes_near_x(uint32_t n, uint64_t x)
 
 typedef std::unique_ptr<KmerHashIterator> KmerHashIteratorPtr;
 
+class MurmurHashPolicy
+{
+public:
+    static
+    HashIntoType
+    hash_dna(const char * kmer, const WordLength ksize)
+    {
+        return _hash_murmur(kmer, ksize);
+    }
+};
+
+template <typename HashingPolicy>
 class Hashtable: public
     KmerFactory  		// Base class implementation of a Bloom ht.
 {
@@ -188,7 +200,8 @@ public:
     HashIntoType
     hash_dna(const char * kmer) const
     {
-        return _hash(kmer, _ksize);
+        //return _hash(kmer, _ksize);
+        return HashingPolicy::hash_dna(kmer, _ksize);
     }
 
     inline
@@ -487,12 +500,13 @@ public:
 };
 
 
-class MurmurHashtable : public oxli::Hashtable
+class MurmurHashtable : public oxli::Hashtable<MurmurHashPolicy>
 {
 public:
     explicit MurmurHashtable(WordLength ksize, Storage * s)
         : Hashtable(ksize, s) { };
 
+#if 0
     inline
     virtual
     HashIntoType
@@ -503,6 +517,7 @@ public:
         }
         return _hash_cyclic(kmer, _ksize);
     }
+  #endif
 
     inline virtual HashIntoType
     hash_dna_top_strand(const char * kmer) const
@@ -524,8 +539,8 @@ public:
 
     virtual KmerHashIteratorPtr new_kmer_iterator(const char * sp) const
     {
-        //KmerHashIterator * ki = new MurmurKmerHashIterator(sp, _ksize);
-        KmerHashIterator * ki = new RollingHashKmerIterator(sp, _ksize);
+        KmerHashIterator * ki = new MurmurKmerHashIterator(sp, _ksize);
+        //KmerHashIterator * ki = new RollingHashKmerIterator(sp, _ksize);
         return unique_ptr<KmerHashIterator>(ki);
     }
 

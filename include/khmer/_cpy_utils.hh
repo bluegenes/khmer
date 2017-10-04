@@ -31,32 +31,20 @@
 namespace khmer {
 
 
-bool 
-convert_HashIntoType_to_PyObject(const oxli::HashIntoType &hashval, 
+bool
+convert_HashIntoType_to_PyObject(const oxli::HashIntoType &hashval,
                                  PyObject **value);
 
 
-bool 
+bool
 convert_PyLong_to_HashIntoType(PyObject * value,
                                oxli::HashIntoType &hashval);
 
 
-bool 
-convert_PyObject_to_HashIntoType(PyObject * value, 
-                                 oxli::HashIntoType& hashval, 
+bool
+convert_PyObject_to_HashIntoType(PyObject * value,
+                                 oxli::HashIntoType& hashval,
                                  oxli::WordLength ksize);
-
-
-bool 
-ht_convert_PyObject_to_HashIntoType(PyObject * value, 
-                                    oxli::HashIntoType& hashval, 
-                                    const oxli::Hashtable * ht);
-
-
-bool 
-ht_convert_PyObject_to_Kmer(PyObject * value, 
-                            oxli::Kmer& kmer, 
-                            const oxli::Hashtable * ht);
 
 
 bool convert_Pytablesizes_to_vector(PyListObject * sizes_list_o,
